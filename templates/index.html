@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>DRF Sample</title>
+</head>
+<body>
+  <h1>Welcome to DRF sample!</h1>
+  {% if user.is_authenticated %}
+    <p>こんにちは、{{ user.get_username }} さん</p>
+    <a href="{% url 'rest_framework:logout' %}">ログアウト</a>
+  {% else %}
+    <p>こんにちは、ゲストさん</p>
+    <!-- /api-auth/login へのリンクを提供する -->
+    <a href="{% url 'rest_framework:login' %}">ログイン</a>
+  {% endif %}
+</body>
+</html>
