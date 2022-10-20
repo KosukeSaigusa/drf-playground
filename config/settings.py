@@ -41,12 +41,21 @@ INSTALLED_APPS = [
     # サードパーティのアプリケーション
     "rest_framework",
     "djoser",
+    "corsheaders",
     # 自作アプリケーション
     "apiv1.apps.Apiv1Config",
     "shop.apps.ShopConfig",
 ]
 
 MIDDLEWARE = [
+    # フロントエンドの Web サーバのオリジンからの API アクセスを許可するために
+    # django-cors-headers パッケージを使用して CORS のホワイトリストを設定する。
+    #
+    # - フロントエンドの配信用エンドポイント http://127.0.0.1:8000
+    # - Django の REST API のエンドポイント https://127.0.0.1:8000/api/v1/...
+    #
+    # というようにポート番号が異なるため？
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -160,3 +169,10 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
 }
+
+# CORS の設定
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    "https://127.0.0.1:8080",
+]
