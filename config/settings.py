@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os.path
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # サードパーティのアプリケーション
     "rest_framework",
+    "djoser",
     # 自作アプリケーション
     "apiv1.apps.Apiv1Config",
     "shop.apps.ShopConfig",
@@ -145,8 +147,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # REST Framework
 REST_FRAMEWORK = {
-    # DRF の Cookie 認証の設定
     "DEFAULT_AUTHENTICATION_CLASSES": {
-        "rest_framework.authentication.SessionAuthentication",
+        # DRF の Cookie 認証の設定
+        # "rest_framework.authentication.SessionAuthentication",
+        # DRF の JWT 認証の設定
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     }
+}
+
+# simplejwt の設定
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": ("JWT",),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
 }
