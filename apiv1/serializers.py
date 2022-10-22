@@ -1,12 +1,18 @@
+from decimal import Decimal
+from typing import Optional
+
 from rest_framework import serializers
 
+from config.constants import TAX_RATE
 from shop.models import Book
-
 
 # ModelSerializer を継承することで、モデルのフィールド定義を再利用することができ、
 # モデルの定義に基づいた型変換やバリデーションが行われるので、シリアライザの
 # 記述量を大幅に減らすことができる。
 class BookSerializer(serializers.ModelSerializer):
+    # 税込価格（Book モデルには存在しないが、レスポンスに追加したいフィールド）
+    price_with_tax = serializers.SerializerMethodField()
+
     class Meta:
         # Meta クラスの model に対象のモデルクラスを定義する。
         model = Book
@@ -14,7 +20,13 @@ class BookSerializer(serializers.ModelSerializer):
         # Meta クラスの fields には利用するフィールド名を list or tuple 形式で定義する。
         # すべてのフィールドを利用する場合は "__all__" という文字列を指定しても良い。
         # 利用しないフィールドを指定する場合は、fields の代わりにに exclude を使用する。
-        fields = ["id", "title", "price"]
+        fields = [
+            "id",
+            "title",
+            "price",
+            # Book モデルには存在しないが、レスポンスに追加したいフィールド
+            "price_with_tax",
+        ]
 
         # extra_kwargs を使用することでフィールドオプション定義を上書きすることもできる。
         #
@@ -52,3 +64,9 @@ class BookSerializer(serializers.ModelSerializer):
     #
     # 例：
     # price = serializers.CharField(read_only=True)
+
+    # SerializerMethodField を用いて出力専用の戻り値を出力する。
+    def get_price_with_tax(self, instance) -> Optional[int]:
+        if not instance.price:
+            return None
+        return int(Decimal(instance.price) * Decimal(1 + TAX_RATE))
