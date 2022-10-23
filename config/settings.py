@@ -161,7 +161,14 @@ REST_FRAMEWORK = {
         # "rest_framework.authentication.SessionAuthentication",
         # DRF の JWT 認証の設定
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    }
+    },
+    # rest_framework/settings.py におけるデフォルト設定。
+    # ブラウザ上でリクエストおよびレスポンスのサマリを確認するなどの機能が利用できる。
+    # 本番環境では無効化するべきである。
+    # "DEFAULT_RENDERER_CLASSES": [
+    #     "rest_framework.renderers.JSONRenderer",
+    #     "rest_framework.renderers.BrowsableAPIRenderer",
+    # ],
 }
 
 # simplejwt の設定
@@ -176,3 +183,5 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "https://127.0.0.1:8080",
 ]
+
+#
