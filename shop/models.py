@@ -35,5 +35,13 @@ class Book(models.Model):
     price = models.IntegerField(verbose_name="価格", null=True, blank=True)
     created_at = models.DateTimeField(verbose_name="登録日時", auto_now_add=True)
 
+    # BookSerializer に price_with_tax の SerializerMethodField を
+    # 定義するのもよいが、Book モデルに @property で属性を追加しても良い。
+    # @property
+    # def price_with_tax(self) -> Optional[int]:
+    #     if not self.price:
+    #         return None
+    #     return int(Decimal(self.price) * Decimal(1 + TAX_RATE))
+
     def __str__(self):
         return self.title
