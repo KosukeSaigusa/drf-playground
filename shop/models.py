@@ -3,6 +3,19 @@ import uuid
 from django.db import models
 
 
+class Author(models.Model):
+    """
+    著者モデル。
+    Book: N - Author: N の関係である。
+    """
+
+    class Meta:
+        db_table = "author"
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(verbose_name="著者名", max_length=120)
+
+
 class Book(models.Model):
     """
     本モデル。
@@ -34,6 +47,9 @@ class Book(models.Model):
     title = models.CharField(verbose_name="タイトル", max_length=120)
     price = models.IntegerField(verbose_name="価格", null=True, blank=True)
     created_at = models.DateTimeField(verbose_name="登録日時", auto_now_add=True)
+
+    # Book と N 対 N の関係にある Author モデルを ManyToManyField で表現している。
+    authors = models.ManyToManyField(Author, verbose_name="著者", blank=True)
 
     # BookSerializer に price_with_tax の SerializerMethodField を
     # 定義するのもよいが、Book モデルに @property で属性を追加しても良い。
