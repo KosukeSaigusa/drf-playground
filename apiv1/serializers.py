@@ -4,7 +4,25 @@ from typing import Optional
 from rest_framework import serializers
 
 from config.constants import TAX_RATE
-from shop.models import Book
+from shop.models import Book, Author
+
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+
+    fields = [
+        "id",
+        "name",
+    ]
+
+
+# class AuthorListSerializer(serializers.ListSerializer):
+#     def update(self, instance, validated_data):
+#         pass
+#
+#     child = AuthorSerializer()
+
 
 # ModelSerializer を継承することで、モデルのフィールド定義を再利用することができ、
 # モデルの定義に基づいた型変換やバリデーションが行われるので、シリアライザの
@@ -12,6 +30,18 @@ from shop.models import Book
 class BookSerializer(serializers.ModelSerializer):
     # 税込価格（Book モデルには存在しないが、レスポンスに追加したいフィールド）
     price_with_tax = serializers.SerializerMethodField()
+
+    # Book を取得する API で、Book モデルに（一対一で）関連している
+    # 出版社（Publisher モデル）のフィールドも一緒に取得したい場合には、
+    # このように ReadOnlyField と source オプションを利用することで
+    # それを実現することができる。
+    publisher_name = serializers.ReadOnlyField(source="publisher.name")
+
+    # Book モデルの ManyToManyField である Author を、Book を取得する API で
+    # 一緒に取得したい場合には、このような ListSerializer を使用するか、
+    # many=True な Serializer を記述する。
+    # authors = AuthorListSerializer()
+    authors = AuthorSerializer(many=True)
 
     class Meta:
         # Meta クラスの model に対象のモデルクラスを定義する。
@@ -26,6 +56,10 @@ class BookSerializer(serializers.ModelSerializer):
             "price",
             # Book モデルには存在しないが、レスポンスに追加したいフィールド
             "price_with_tax",
+            # Book を取得する API で一緒に取得したい Book モデルの関連モデルのフィールド
+            "publisher_name",
+            # Book モデルの ManyToManyField である Author がネストされて取得できる。
+            "authors",
         ]
 
         # extra_kwargs を使用することでフィールドオプション定義を上書きすることもできる。
