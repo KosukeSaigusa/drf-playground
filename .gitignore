@@ -37,3 +37,4 @@ Pipfile
 Pipfile.lock
 tmp/
 .direnv/
+config/local.py

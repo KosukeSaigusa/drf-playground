@@ -20,9 +20,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-0x!bcc5qn#v+p+mze%z-z+h2b7@o58lrnclj=)6+-)m^@pat2m"
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -183,3 +180,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "https://127.0.0.1:8080",
 ]
+
+try:
+    from .local import *
+except ImportError:
+    pass
